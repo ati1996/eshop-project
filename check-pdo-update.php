@@ -1,0 +1,34 @@
+<?php
+include("connect.php");
+include("func.php");
+if(isset($_POST["btn"]))
+{
+	$fname=xss($_POST["fname"]);
+	$lname=xss($_POST["lname"]);
+	$city=xss($_POST["city"]);
+	$age=xss($_POST["age"]);
+	$user=xss($_POST["user"]);
+	$pass=xss($_POST["pass"]);
+	$pass=hash1($pass);
+	$sql="UPDATE `users` SET `fname` =:fname, `lname` =:lname, `city` =:city, `age` =:age, `username` =:user, `password` = :pass WHERE `users`.`id` =:id;";
+	$resulte=$connect->prepare($sql);
+	$resulte->bindparam(":fname",$fname);
+	$resulte->bindparam(":lname",$lname);
+	$resulte->bindparam(":city",$city);
+	$resulte->bindparam(":age",$age);
+	$resulte->bindparam(":user",$user);
+	$resulte->bindparam(":pass",$pass);
+	$resulte->bindparam(":id",$_SESSION["id"]);
+	$query=$resulte->execute();
+	if($query)
+	{
+		header("location:pdo.php?update=2010");
+		exit;
+	}
+	else
+	{
+		header("location:pdo.php?error=2020");
+		exit;
+	}
+}
+?>
